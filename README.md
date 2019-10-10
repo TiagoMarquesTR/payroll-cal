@@ -27,7 +27,7 @@ From a terminal, open on the root of the project
 
 ```
 git clone https://github.com/TiagoMarquesTR/payroll-cal.git
-cd employee
+cd payroll-cal
 ```
 ## Build
 
