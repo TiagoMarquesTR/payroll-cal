@@ -2,13 +2,27 @@ package br.com.tr.payrollcal.model;
 
 import java.util.UUID;
 
-public class Rubric {
-    private final UUID rubricId = UUID.randomUUID();
-    private final String name;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
-	public Rubric(String name){
-        this.name = name;
+public class Rubric {
+	@JsonAlias(value = "rubric_id")
+    private UUID rubricId;
+    private String name;
+
+    public Rubric() {};
+    
+	public Rubric(UUID rubricId, String name) {
+    	this.rubricId = rubricId;
+    	this.name = name;
     }
+    
+    public void setRubricId(UUID rubricId) {
+		this.rubricId = rubricId;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
     public UUID getRubricId() {
         return rubricId;
@@ -17,4 +31,7 @@ public class Rubric {
     public String getName() {
         return name;
     }
+    
+    public static final String HORAS_TRABALHADAS = "Horas_trabalhadas";
+    public static final String INSS = "INSS";
 }
