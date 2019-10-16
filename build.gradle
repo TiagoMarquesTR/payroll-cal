@@ -15,11 +15,17 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	compile.exclude module: 'spring-boot-starter-tomcat'
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.postgresql:postgresql:42.2.5'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.10.0'
-	implementation 'io.lettuce:lettuce-core:5.2.0.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-undertow'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	implementation 'org.postgresql:postgresql:42.2.5'
+	implementation 'io.lettuce:lettuce-core:5.2.0.RELEASE'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.10.0'
 }
