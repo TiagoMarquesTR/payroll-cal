@@ -54,9 +54,20 @@ public class EntityCacheRepository<T> implements DataCacheRepository<T> {
 		}
 	}
 
+	public Long count(String collection) {
+		try {
+			return syncCommands.hlen(collection);
+		}catch (Exception e) {
+			System.out.printf("Error to count '%s' collection in cache: %s", collection, e.getMessage());
+			return (long) 0;
+		}
+	}
+	
 	public Boolean isAvailable() {
-		// TODO Auto-generated method stub
-		return null;
+		if(!syncCommands.ping().isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 
 }

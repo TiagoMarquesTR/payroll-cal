@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.GregorianCalendar;
 
 import br.com.tr.payrollcal.client.ClientClient;
 import br.com.tr.payrollcal.model.*;
-import br.com.tr.payrollcal.repository.EntityCacheRepository;
+import br.com.tr.payrollcal.repository.RubricRepository;
 
 public class MontlyCalculation {
     private ClientClient clientClient = new ClientClient();
@@ -28,12 +26,10 @@ public class MontlyCalculation {
  
     public void calculate(){
         Double calculatedValue = 0.00;
-	    
-		EntityCacheRepository<Rubric> rubricEntityCache = new EntityCacheRepository<Rubric>();
-		rubricEntityCache.add("Rubrics", Rubric.HORAS_TRABALHADAS, new Rubric(UUID.randomUUID(), "Horas Trabalhadas"));
-		rubricEntityCache.add("Rubrics", Rubric.INSS, new Rubric(UUID.randomUUID(), "INSS"));
+	           
+        RubricRepository rubricRepository = new RubricRepository(client.getClientId());
 		
-		rubric = rubricEntityCache.find("Rubrics", Rubric.HORAS_TRABALHADAS, Rubric.class);
+        rubric = rubricRepository.findByKey(Rubric.HORAS_TRABALHADAS);
         calculatedValue = calculateHorasTrabalhadas();
         sumAmount(rubric, calculatedValue);
         payrollDetails.add(new PayrollDetail.Builder(client.getClientId(), contract.getContractId(), rubric.getRubricId(), competence)
@@ -41,7 +37,7 @@ public class MontlyCalculation {
                                                     .calculatedValue(calculatedValue).build());
         calculatedValue = 0.00;
 
-        rubric = rubricEntityCache.find("Rubrics", Rubric.INSS, Rubric.class);
+        rubric = rubricRepository.findByKey(Rubric.INSS);
         calculatedValue = calculateInss();
         sumAmount(rubric, calculatedValue);
         payrollDetails.add(new PayrollDetail.Builder(client.getClientId(), contract.getContractId(), rubric.getRubricId(), competence)
