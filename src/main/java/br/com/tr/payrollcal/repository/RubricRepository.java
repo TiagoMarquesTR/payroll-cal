@@ -19,7 +19,7 @@ public class RubricRepository {
 		if(rubricEntityCache.count(this.getCollectionName()) == 0) {
 			RubricClient rubricClient = new RubricClient();
 		    List<Rubric> rubrics = rubricClient.getAll();
-		    System.out.println("Obtive a lista de rubricas no banco relacional. Total: " + rubrics.size());
+		    System.out.println("Obtive a lista de rubricas no PostgreSQL. Total: " + rubrics.size());
 		    
 		    for (Rubric rubric : rubrics) {
 		    	rubricEntityCache.add(this.getCollectionName(), rubric.getName(), rubric);

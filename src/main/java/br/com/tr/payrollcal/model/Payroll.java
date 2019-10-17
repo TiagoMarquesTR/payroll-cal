@@ -1,6 +1,8 @@
 package br.com.tr.payrollcal.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Payroll {
@@ -14,7 +16,21 @@ public class Payroll {
     private Double overtimeBaseAmount = 0.00;
     private Double grossPay = 0.00;
     private Double deductions = 0.00;
+    private List<PayrollDetail> payrollDetails;
 
+    public void addDetail(UUID rubricId, Double calculatedValue) {
+    	payrollDetails.add(new PayrollDetail.Builder(this.clientId, this.contractId,
+    												 rubricId, this.competence)
+    												.calculatedValue(calculatedValue).build());
+    }
+    
+    public void addDetail(UUID rubricId, Double referenceValue, Double calculatedValue) {
+    	payrollDetails.add(new PayrollDetail.Builder(this.clientId, this.contractId,
+    												 rubricId, this.competence)
+    												.referenceValue(referenceValue)
+    												.calculatedValue(calculatedValue).build());
+    }
+    
     public UUID getClientId() {
         return clientId;
     }
@@ -23,6 +39,7 @@ public class Payroll {
         this.clientId = clientId;
         this.contractId = contractId;
         this.competence = competence;
+        this.payrollDetails = new ArrayList<PayrollDetail>();
     }
 
     public UUID getContractId() {
@@ -91,5 +108,39 @@ public class Payroll {
 
     public void setDeductions(Double deductions) {
         this.deductions = deductions;
+    }
+    
+    public List<PayrollDetail> getPayrollDetails() {
+		return payrollDetails;
+	}
+
+	public void sumAmount(Rubric rubric, Double calculatedValue){
+        if(rubric.getType() == 'P') {
+        	if(rubric.getConsistsNetPay() == 'Y') {
+        		setGrossPay(getGrossPay() + calculatedValue);
+        	}
+        }else {
+        	if(rubric.getConsistsNetPay() == 'Y') {
+        		setDeductions(getDeductions() + calculatedValue);
+        	}
+        	
+        	calculatedValue *= -1;
+        }
+    	
+    	if(rubric.getInssBase() == 'Y') {
+        	setInssBaseAmount(getInssBaseAmount() + calculatedValue);
+        }
+    	
+    	if(rubric.getFgtsBase() == 'Y') {
+    		setFgtsBaseAmount(getFgtsBaseAmount() + calculatedValue);
+    	}
+    	
+    	if(rubric.getIrrfBase() == 'Y') {
+    		setIrrfBaseAmount(getIrrfBaseAmount() + calculatedValue);
+    	}
+    	
+    	if(rubric.getOvertimeBase() == 'Y') {
+    		setOvertimeBaseAmount(getOvertimeBaseAmount() + calculatedValue);
+    	}
     }
 }
